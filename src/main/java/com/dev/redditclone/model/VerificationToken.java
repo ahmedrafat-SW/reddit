@@ -16,7 +16,7 @@ import java.time.Instant;
 @AllArgsConstructor
 public class VerificationToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
     private String token;
     private Instant expireDate;

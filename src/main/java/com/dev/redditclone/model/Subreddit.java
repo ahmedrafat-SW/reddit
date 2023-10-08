@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Subreddit {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @NotBlank(message = "Subreddit name shouldn't be null")

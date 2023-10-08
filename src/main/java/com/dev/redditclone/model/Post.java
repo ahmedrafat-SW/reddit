@@ -14,7 +14,7 @@ import java.time.Instant;
 @NoArgsConstructor
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long postId;
     @NotBlank(message = "Post name should not be null")
     private String postName;
