@@ -1,6 +1,8 @@
 package com.dev.redditclone.service;
 
 
+import com.dev.redditclone.dto.AuthenticationResponse;
+import com.dev.redditclone.dto.LoginRequest;
 import com.dev.redditclone.dto.RegisterRequest;
 import com.dev.redditclone.exception.SpringRedditException;
 import com.dev.redditclone.model.NotificationEmail;
@@ -8,7 +10,13 @@ import com.dev.redditclone.model.User;
 import com.dev.redditclone.model.VerificationToken;
 import com.dev.redditclone.repository.UserRepository;
 import com.dev.redditclone.repository.VerificationTokenRepository;
+import com.dev.redditclone.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +37,8 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
+    private final AuthenticationManager authManager;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public void register(RegisterRequest request) {
@@ -67,16 +77,35 @@ public class AuthenticationService {
 
 
     public void verifyAccount(String token) {
-        Optional<VerificationToken> verificationToken = this.verificationTokenRepository.findByToken(token);
-        verificationToken.orElseThrow(() -> new SpringRedditException("Invalid Verification Token."));
+        Optional<VerificationToken> verificationToken =
+                this.verificationTokenRepository.findByToken(token);
+        verificationToken.orElseThrow(() ->
+                new SpringRedditException("Invalid Verification Token."));
         verifyAndEnableAccount(verificationToken.get());
     }
 
     private void verifyAndEnableAccount(VerificationToken verificationToken) {
         String email = verificationToken.getUser().getEmail();
         User user = this.userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new SpringRedditException("Can't find user with email: "+email));
+                .orElseThrow(() ->
+                        new SpringRedditException("Can't find user with email: "+email));
         user.setEnabled(true);
         this.userRepository.save(user);
+    }
+
+    public AuthenticationResponse authenticate(LoginRequest loginRequest) {
+        UsernamePasswordAuthenticationToken authRequest =
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+        Authentication authentication = authManager.authenticate(authRequest);
+        updateSecurityContextWith(authentication);
+        String jwt = jwtProvider.generateToken(authentication);
+
+        return new AuthenticationResponse(loginRequest.getUsername(), jwt);
+    }
+
+    private void updateSecurityContextWith(Authentication authRequest) {
+        SecurityContext jwtCtx = SecurityContextHolder.createEmptyContext();
+        jwtCtx.setAuthentication(authRequest);
+        SecurityContextHolder.setContext(jwtCtx);
     }
 }
