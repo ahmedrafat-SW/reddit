@@ -14,10 +14,11 @@ import java.time.Instant;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@SequenceGenerator(name = "comment_seq", sequenceName = "comment_seq", allocationSize = 1)
 public class Comment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_seq")
     private Long id;
     private String text;
     private Instant CreatedDate;
