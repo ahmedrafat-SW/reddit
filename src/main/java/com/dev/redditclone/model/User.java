@@ -19,10 +19,13 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "_user")
+@SequenceGenerator(name = "_user_seq",
+        sequenceName = "_user_seq",
+        allocationSize = 1)
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "_user_seq")
     private Long userId;
 
     @NotBlank(message = "Username is required")

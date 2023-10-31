@@ -12,9 +12,10 @@ import java.time.Instant;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@SequenceGenerator(name = "post_seq", sequenceName = "post_seq",allocationSize = 1)
 public class Post {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_seq")
     private Long postId;
     @NotBlank(message = "Post name should not be null")
     private String postName;
@@ -25,13 +26,11 @@ public class Post {
     private String description;
     private Integer voteCount;
     private Instant createdDate;
-
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "subredditId", referencedColumnName = "id")
     private Subreddit subreddit;
 
 }

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Vote {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private VoteType voteType;
     @ManyToOne(fetch = FetchType.LAZY)

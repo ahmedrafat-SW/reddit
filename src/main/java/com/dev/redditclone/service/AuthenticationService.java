@@ -5,6 +5,7 @@ import com.dev.redditclone.dto.AuthenticationResponse;
 import com.dev.redditclone.dto.LoginRequest;
 import com.dev.redditclone.dto.RegisterRequest;
 import com.dev.redditclone.exception.SpringRedditException;
+import com.dev.redditclone.exception.SubredditNotFoundException;
 import com.dev.redditclone.model.NotificationEmail;
 import com.dev.redditclone.model.User;
 import com.dev.redditclone.model.VerificationToken;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthenticationService {
     private final String ACTIVATION_URL = "http://localhost:8080/api/auth/accountVerification/";
     private final String VERIFICATION_MESSAGE =
@@ -40,7 +42,6 @@ public class AuthenticationService {
     private final AuthenticationManager authManager;
     private final JwtProvider jwtProvider;
 
-    @Transactional
     public void register(RegisterRequest request) {
         User user = User.builder()
                 .username(request.getUsername())
@@ -107,5 +108,13 @@ public class AuthenticationService {
         SecurityContext jwtCtx = SecurityContextHolder.createEmptyContext();
         jwtCtx.setAuthentication(authRequest);
         SecurityContextHolder.setContext(jwtCtx);
+    }
+
+    public User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        return this.userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new SubredditNotFoundException("Can't find user with username: "+username));
+
     }
 }

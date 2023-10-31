@@ -14,9 +14,10 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@SequenceGenerator(name = "token_seq", sequenceName = "token_seq", allocationSize = 1)
 public class VerificationToken {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_seq")
     private Long id;
     private String token;
     private Instant expireDate;
