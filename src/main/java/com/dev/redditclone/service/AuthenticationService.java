@@ -13,6 +13,7 @@ import com.dev.redditclone.repository.UserRepository;
 import com.dev.redditclone.repository.VerificationTokenRepository;
 import com.dev.redditclone.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -116,5 +117,10 @@ public class AuthenticationService {
         return this.userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new SubredditNotFoundException("Can't find user with username: "+username));
 
+    }
+
+    public boolean isLoggedIn() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 }
