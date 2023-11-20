@@ -1,4 +1,7 @@
-# Reddit Clone using Spring And Angular
+# Reddit Clone using Spring And Angular <img src="https://github.com/ahmedrafat-SW/reddit/assets/129176607/cf6b4719-2075-43f9-aee4-4657fd139c1a" width="30" height="30" >
 
-![59486444-3699ab80-8e71-11e9-9f9a-836e431dcbfd](https://github.com/ahmedrafat-SW/reddit/assets/129176607/bb4a989c-4316-46f5-9212-60bdfb23486f)
+**A vibrant online community where users can engage in discussions, share content, and discover a world of diverse perspectives.**
+**Built with Angular for a sleek and dynamic front-end experience, paired with the robust Spring Boot framework and MySQL backend,**
+**Our platform offers a seamless and responsive environment for users to connect.**
 
+**Angular Client repo: https://github.com/ahmedrafat-SW/reddit-ui**
