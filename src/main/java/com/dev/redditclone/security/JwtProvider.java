@@ -26,7 +26,7 @@ public class JwtProvider {
 
     public String generateToken(Authentication authentication) {
         Instant issueTime = Instant.now();
-        expireTime = issueTime.plus(15, ChronoUnit.MINUTES);
+        this.setExpireTime(issueTime.plus(15, ChronoUnit.MINUTES));
         JwtClaimsSet claims =  JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(issueTime)
@@ -56,7 +56,7 @@ public class JwtProvider {
         Jwt jwToken = decoder.decode(token);
         Instant expire = jwToken.getExpiresAt();
         assert expire != null;
-        return expire.isBefore(Instant.now());
+        return ! Instant.now().isAfter(expire);
     }
 
     public String getUsername(){

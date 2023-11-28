@@ -4,6 +4,7 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import java.time.Instant;
 
@@ -23,6 +24,7 @@ public class Post {
     private String url;
     @Nullable
     @Lob
+    @Column(columnDefinition = "text")
     private String description;
     private Integer voteCount;
     private Instant createdDate;

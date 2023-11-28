@@ -41,7 +41,7 @@ public class CommentService {
         sendCommentNotification(user, message);
         Comment saved = this.commentRepository.save(comment);
         dto.setId(saved.getId());
-        dto.setCreatedDate(saved.getCreatedDate());
+        dto.setCreatedDate(commentMapper.getDuration(saved));
         return dto;
     }
 

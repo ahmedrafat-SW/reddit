@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
@@ -108,7 +110,7 @@ public class AuthenticationService {
 
         return AuthenticationResponse.builder()
                 .refreshToken(refreshTokenService.generateRefreshToken().getToken())
-                .expiredAt(jwtProvider.getExpireTime())
+                .expiredAt(Instant.now().plus(15, ChronoUnit.MINUTES))
                 .username(loginRequest.getUsername())
                 .jwToken(jwt).build();
     }
